@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded Files</title>
+    <!-- Ajout de FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .user-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+        }
+        .user-section h2 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .files-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            width: 180px; /* Largeur fixe pour l'alignement */
+            text-align: center;
+        }
+        .file-item i {
+            font-size: 24px;
+            margin-bottom: 10px; /* Espacement entre l'icône et le texte */
+        }
+        .file-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 10px; /* Espacement entre l'image et les liens */
+        }
+        .file-item a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .file-item a:hover {
+            text-decoration: underline;
+        }
+        .file-name {
+            font-size: 12px;
+            color: #555;
+            margin-top: 5px;
+        }
+        .toggle-description {
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #007BFF;
+            text-decoration: underline;
+        }
+        .toggle-description:hover {
+            color: #0056b3;
+        }
+        .file-description {
+            display: none; /* Masqué par défaut */
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Uploaded Files</h1>
+    <a href="/">Upload New Files</a>
+
+    <!-- Boucle par utilisateur -->
+    {% for user, uploads in uploads_by_user.items() %}
+    <div class="user-section">
+        <h2>{{ user }}</h2>
+        <!-- Conteneur pour aligner les fichiers côte à côte -->
+        <div class="files-container">
+            {% for upload in uploads %}
+            <div class="file-item">
+                <!-- Afficher l'image si elle existe -->
+                {% if upload.image_path and upload.image_path.endswith(('png', 'jpg', 'jpeg', 'gif')) %}
+                    <img src="{{ upload.image_path }}" alt="Image">
+                    <a href="{{ upload.image_path }}" download>Download Image</a>
+                    <span class="file-name">{{ upload.image_path.split('/')[-1] }}</span>
+                {% endif %}
+                
+                <!-- Afficher le document avec des icônes classiques -->
+                {% if upload.document_path and upload.document_path.endswith(('pdf')) %}
+                    <i class="fas fa-file-pdf" style="color: red;"></i>
+                    <a href="{{ upload.document_path }}" target="_blank">Preview PDF</a>
+                    <span class="file-name">{{ upload.document_path.split('/')[-1] }}</span>
+                {% elif upload.document_path and upload.document_path.endswith(('doc', 'docx')) %}
+                    <i class="fas fa-file-word" style="color: blue;"></i>
+                    <a href="{{ upload.document_path }}" target="_blank">Preview Word</a>
+                    <span class="file-name">{{ upload.document_path.split('/')[-1] }}</span>
+                {% elif upload.document_path and upload.document_path.endswith(('txt')) %}
+                    <i class="fas fa-file-alt" style="color: gray;"></i>
+                    <a href="{{ upload.document_path }}" target="_blank">Preview Text</a>
+                    <span class="file-name">{{ upload.document_path.split('/')[-1] }}</span>
+                {% else %}
+                    <i class="fas fa-file" style="color: black;"></i>
+                    <a href="{{ upload.document_path }}" target="_blank">Preview File</a>
+                    <span class="file-name">{{ upload.document_path.split('/')[-1] }}</span>
+                {% endif %}
+
+                <!-- Bouton pour afficher/masquer la description -->
+                {% if upload.description %}
+                <div class="toggle-description" onclick="toggleDescription(this)">
+                    Voir Description
+                </div>
+                <div class="file-description">
+                    {{ upload.description }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <script>
+        // Fonction pour afficher/masquer la description
+        function toggleDescription(element) {
+            const description = element.nextElementSibling;
+            if (description.style.display === "none" || description.style.display === "") {
+                description.style.display = "block";
+                element.textContent = "Masquer Description";
+            } else {
+                description.style.display = "none";
+                element.textContent = "Voir Description";
+            }
+        }
+    </script>
+</body>
+</html>
