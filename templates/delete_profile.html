@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Profile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 400px;
+        }
+
+        .form-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-container .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-container .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-container .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-container .btn {
+            width: 100%;
+            padding: 10px;
+            background: #ff4b2b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .form-container .btn:hover {
+            background: #ff3c1f;
+        }
+
+        .form-container .btn-cancel {
+            margin-top: 10px;
+            background: #ccc;
+            color: #333;
+        }
+
+        .form-container .btn-cancel:hover {
+            background: #bbb;
+        }
+
+        .form-container .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        /* Cancel button */
+        .cancel-btn {
+            width: 100%;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #f0f0f0;
+            color: #333333;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #eeeeee;
+            color: #666666;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Delete Your Profile</h2>
+        <p>Enter your password to confirm the deletion of your profile.</p>
+        {% if messages %}
+        <div class="error">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Delete Profile</button>
+            <br><br>
+            <button class="cancel-btn" onclick="window.location.href='/profile/'">Cancel</button>
+        </form>
+    </div>
+</body>
+</html>

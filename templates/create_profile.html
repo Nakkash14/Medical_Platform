@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Profil</title>
+    <link rel="stylesheet" href="{% static 'profile.Form.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
+    <style>
+        #lottie-container {
+            display: none;
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+        }
+        .formbold-error p {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="formbold-main-wrapper">
+        <div class="formbold-form-wrapper">
+            <img src="{% static 'ProfileForm/image/hero-doc.png' %}" width="550" height="350" alt="Image du profil">
+            
+            <form method="POST" enctype="multipart/form-data" onsubmit="showAnimation(event)" action="{% url 'create_profile' %}">
+                {% csrf_token %}
+
+                <!-- Champ Prénom -->
+                <div class="formbold-mb-3">
+                    <label for="firstname" class="formbold-form-label">Prénom</label>
+                    <input type="text" name="firstname" id="firstname" class="formbold-form-input" 
+                           value="{{ profile.firstname|default_if_none:'' }}">
+                </div>
+
+                <!-- Champ Nom -->
+                <div class="formbold-mb-3">
+                    <label for="lastname" class="formbold-form-label">Nom</label>
+                    <input type="text" name="lastname" id="lastname" class="formbold-form-input" 
+                           value="{{ profile.lastname|default_if_none:'' }}">
+                </div>
+
+                <!-- Champ Âge -->
+                <div class="formbold-mb-3">
+                    <label for="age" class="formbold-form-label">Âge</label>
+                    <input type="number" name="age" id="age" class="formbold-form-input" 
+                           value="{{ profile.age|default_if_none:'' }}">
+                </div>
+
+                <!-- Champ Date de naissance -->
+                <div class="formbold-mb-3">
+                    <label for="dob" class="formbold-form-label">Date de naissance</label>
+                    <input type="date" name="dob" id="dob" class="formbold-form-input" 
+                           value="{{ profile.dob|date:'Y-m-d'|default_if_none:'' }}">
+                </div>
+
+                <!-- Champ Genre -->
+                <div class="formbold-mb-3">
+                    <label for="gender" class="formbold-form-label">Genre</label>
+                    <select name="gender" id="gender" class="formbold-form-input">
+                        <option value="">Sélectionnez</option>
+                        <option value="male" {% if profile.gender == "male" %}selected{% endif %}>Homme</option>
+                        <option value="female" {% if profile.gender == "female" %}selected{% endif %}>Femme</option>
+                        <option value="other" {% if profile.gender == "other" %}selected{% endif %}>Autre</option>
+                    </select>
+                </div>
+
+                <!-- Champ Email -->
+                <div class="formbold-mb-3">
+                    <label for="email" class="formbold-form-label">Email</label>
+                    <input type="email" name="email" id="email" class="formbold-form-input" 
+                           value="{{ profile.email|default_if_none:'' }}">
+                </div>
+
+                <!-- Champ Adresse -->
+                <div class="formbold-mb-3">
+                    <label for="address" class="formbold-form-label">Adresse</label>
+                    <input type="text" name="address" id="address" class="formbold-form-input" 
+                           value="{{ profile.address|default_if_none:'' }}">
+                </div>
+
+                <!-- Champ Occupation -->
+                <div class="formbold-mb-3">
+                    <label for="occupation" class="formbold-form-label">Occupation</label>
+                    <select name="occupation" id="occupation" class="formbold-form-input" onchange="toggleFields()">
+                        <option value="">Sélectionnez</option>
+                        <option value="patient" {% if profile.occupation == "patient" %}selected{% endif %}>Patient</option>
+                        <option value="docteur" {% if profile.occupation == "docteur" %}selected{% endif %}>Docteur</option>
+                    </select>
+                </div>
+
+                <!-- Champ Licence -->
+                <div class="formbold-mb-3" id="licenceField" style="display: {% if profile.occupation == 'docteur' %}block{% else %}none{% endif %};">
+                    <label for="licence" class="formbold-form-label">Licence</label>
+                    <input type="file" name="licence" id="licence" class="formbold-form-input">
+                </div>
+
+                <!-- Champ Spécialité -->
+                <div class="formbold-mb-3" id="specialityField" style="display: {% if profile.occupation == 'docteur' %}block{% else %}none{% endif %};">
+                    <label for="speciality" class="formbold-form-label">Spécialité</label>
+                    <input type="text" name="speciality" id="speciality" class="formbold-form-input" 
+                           value="{{ profile.speciality|default_if_none:'' }}">
+                </div>
+
+                <!-- Champ Terms Accepted -->
+                <div class="formbold-checkbox-wrapper">
+                    <label for="terms_accepted" class="formbold-checkbox-label">
+                        <input type="checkbox" name="terms_accepted" id="terms_accepted" class="formbold-input-checkbox" 
+                               {% if profile.terms_accepted %}checked{% endif %}>
+                        J'accepte les <a href="#">conditions, termes et politiques</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="formbold-btn">Soumettre</button>
+            </form>
+
+            <div id="lottie-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const animation = lottie.loadAnimation({
+            container: document.getElementById('lottie-container'),
+            renderer: 'svg',
+            loop: false,
+            autoplay: false,
+            path: '{% static "icons/Animation1.json" %}'
+        });
+
+        function toggleFields() {
+            const occupation = document.getElementById('occupation').value;
+            document.getElementById('licenceField').style.display = occupation === 'docteur' ? 'block' : 'none';
+            document.getElementById('specialityField').style.display = occupation === 'docteur' ? 'block' : 'none';
+        }
+
+        function showAnimation(event) {
+            event.preventDefault();
+            document.getElementById("lottie-container").style.display = "block";
+            animation.play();
+
+            setTimeout(() => {
+                event.target.submit();
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

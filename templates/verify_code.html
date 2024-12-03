@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Code</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'Login_v2/vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Login_v2/css/main.css' %}">
+    <style>
+        #fullScreenAnimation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            visibility: hidden;
+        }
+
+        #errorContainer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        #errorAnimation {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div id="fullScreenAnimation">
+                    <!-- Animation Lottie pleine page pour le succès -->
+                </div>
+
+                <h1 class="login100-form-title">Verify Your Email</h1>
+
+                {% if error %}
+                <div id="errorContainer">
+                    <p class="text-danger">{{ error }}</p>
+                    <div id="errorAnimation"></div>
+                </div>
+                {% endif %}
+
+                <form id="verification-form" method="POST" class="login100-form validate-form">
+                    {% csrf_token %}
+                    <div class="wrap-input100 validate-input">
+                        <input type="text" name="verification_code" class="input100" placeholder="Enter Verification Code" required>
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn" type="submit">Verify</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+    <script src="{% static 'Login_v2/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'Login_v2/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const successAnimationContainer = document.getElementById('fullScreenAnimation');
+            const errorAnimationContainer = document.getElementById('errorAnimation');
+            const form = document.getElementById('verification-form');
+            let isSubmitted = false;
+
+            // Charger l'animation de succès
+            const successAnimation = lottie.loadAnimation({
+                container: successAnimationContainer,
+                renderer: 'svg',
+                loop: true,
+                autoplay: false,
+                path: '{% static "icons/mail-checked-animation.json" %}'
+            });
+
+            // Charger l'animation d'erreur si elle existe
+            if (errorAnimationContainer) {
+                lottie.loadAnimation({
+                    container: errorAnimationContainer,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '{% static "icons/error-animation.json" %}'
+                });
+            }
+
+            form.addEventListener('submit', function (e) {
+                if (isSubmitted) {
+                    e.preventDefault();
+                    return;
+                }
+
+                isSubmitted = true;
+                successAnimationContainer.style.visibility = 'visible';
+                successAnimation.play();
+
+                form.querySelectorAll('button[type="submit"]').forEach(button => {
+                    button.disabled = true;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333333;
+        }
+
+        /* Profile card container */
+        .profile-card {
+            max-width: 500px;
+            width: 100%;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .profile-header {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        /* Decorative circle */
+        .profile-header::before {
+            content: '';
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #66a6ff, #89f7fe);
+            border-radius: 50%;
+            position: absolute;
+            top: -50px;
+            left: calc(50% - 50px);
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #f4f4f4;
+            margin: 0 auto;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: auto;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #333333;
+        }
+
+        .profile-details {
+            text-align: left;
+            margin-top: 20px;
+            line-height: 1.8;
+        }
+
+        .profile-details p {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+
+        .profile-details strong {
+            color: #2575fc;
+        }
+
+        /* Edit Profile Button */
+        .edit-btn {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #66a6ff, #89f7fe);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .edit-btn:hover {
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+        }
+
+        .edit-btn:focus {
+            outline: none;
+        }
+
+        .btn-delete {
+            width: 100%;
+            padding: 10px;
+            background: #ff4b2b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="profile-picture">
+                <!-- Placeholder for profile picture -->
+                <img src="https://via.placeholder.com/120" alt="Profile Picture">
+            </div>
+        </div>
+        <h2 class="profile-name">{{ user_profile.firstname }} {{ user_profile.lastname }}</h2>
+        <div class="profile-details">
+            <p><strong>First Name:</strong> {{ user_profile.firstname }}</p>
+            <p><strong>Last Name:</strong> {{ user_profile.lastname }}</p>
+            <p><strong>Email:</strong> {{ user_profile.email }}</p>
+            <p><strong>Age:</strong> {{ user_profile.age }}</p>
+            <p><strong>Adresse:</strong> {{ user_profile.address }}</p>
+            <p><strong>Date de Naissance:</strong> {{ user_profile.dob|date:'Y-m-d' }}</p>
+        </div>
+        <button class="edit-btn" onclick="window.location.href='/profile/edit/'">Edit Profile</button>
+        <br><br>
+        <button class="btn-delete" onclick="window.location.href='/profile/delete/'">Delete Profile</button>
+    </div>
+</body>
+</html>

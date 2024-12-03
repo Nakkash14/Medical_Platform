@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard-Patient</title>
+</head>
+<body>
+    <input type="hidden" id="user-id" value="{{ user.id }}">
+    
+    <h1>Hey <span id="user-occupation"></span> <span id="user-firstname"></span> <span id="user-lastname"></span>, bienvenue sur votre tableau de bord.</h1>
+    <p> Nous communiquerons avec vous par votre Email : <span id="user-email"></span></p>
+    <p>Occupation : <span id="user-occupation"></span></p>
+    <button>
+        <a href="{% url 'dashboard' %}">Go to Dashboard</a>
+    </button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const userId = document.getElementById("user-id").value;
+
+            fetch(`http://127.0.0.1:8001/api/user-profile/${userId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur lors de la récupération des données utilisateur");
+                    }
+                    return response.json();
+                })
+                .then(profile => {
+                    document.getElementById("user-firstname").textContent = profile.firstname || "N/A";
+                    document.getElementById("user-lastname").textContent = profile.lastname || "N/A";
+                    document.getElementById("user-email").textContent = profile.email || "N/A";
+                    document.getElementById("user-occupation").textContent = profile.occupation || "N/A";
+                    document.getElementById("username").textContent = `${profile.firstname} ${profile.lastname}`;
+                })
+                .catch(error => {
+                    console.error("Erreur lors de l'appel à l'API :", error);
+                });
+        });
+    </script>
+</body>
+</html>
